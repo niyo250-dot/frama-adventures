@@ -31,13 +31,18 @@ This project is a Next.js application with a Node/Express backend and MongoDB da
    ```bash
    npm run create-admin -- your-email@example.com yourpassword
    ```
+   (The login page lives at `/admin/login` and is not linked in the public nav; a small footer link is provided.)
 
-4. Run development server (front and backend):
+6. Run development server (front and backend):
    ```bash
    npm run start:all
    ```
 
-5. Access the site at `http://localhost:3000` and admin dashboard at `http://localhost:3000/admin`.
+7. Access the site at `http://localhost:3000` (or the automatic port from Next.js, e.g. 3001) and the admin dashboard at `http://localhost:3000/admin/login`.
+
+**Deployment note:**  the GitHub repository only contains source code; it does not serve the website. To publish a working site you must deploy the project to a hosting service such as **Vercel**, **Netlify**, **Heroku**, etc. After deployment you will receive a public URL where the site (and `/admin/login`) will be available.
+
+**Authentication:**  At the moment admins authenticate with email/password stored in MongoDB. You can extend this with OAuth (e.g. Google) using libraries like [NextAuth.js](https://next-auth.js.org) or passport.js. The current implementation is JWT-based; strengthen it by enforcing strong passwords and/or adding 2FA or OAuth as needed.
 
 
 Feel free to customize pages, styles, and logic as needed.
