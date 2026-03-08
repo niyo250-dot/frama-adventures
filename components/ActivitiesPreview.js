@@ -16,9 +16,7 @@ export default function ActivitiesPreview() {
         <div className="bg-white shadow-md rounded-lg p-4">Bird Watching</div>
       </div>
       <div className="text-center mt-4">
-        <Link href="/activities">
-          <a className="text-accent font-semibold">See all activities →</a>
-        </Link>
+        <Link href="/activities" className="text-accent font-semibold">See all activities →</Link>
       </div>
     </motion.section>
   );

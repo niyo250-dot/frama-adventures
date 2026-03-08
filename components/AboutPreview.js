@@ -13,9 +13,7 @@ export default function AboutPreview() {
       <p className="mb-6">
         Nestled on the shores of Lake Burera, FRAMA Eco-Lodge offers a serene escape into Rwanda’s breathtaking natural beauty. 
       </p>
-      <Link href="/about/who-we-are">
-        <a className="text-accent font-semibold">Learn more →</a>
-      </Link>
+      <Link href="/about/who-we-are" className="text-accent font-semibold">Learn more →</Link>
     </motion.section>
   );
 }

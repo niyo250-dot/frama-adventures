@@ -15,10 +15,8 @@ export default function ActivityCard({ activity }) {
         <p className="text-gray-700 mb-4">{activity.description}</p>
         <p className="font-semibold">${activity.price}</p>
         <p className="text-sm">Duration: {activity.duration}</p>
-        <Link href="/book">
-          <a className="inline-block mt-4 px-4 py-2 bg-accent text-white rounded-md">
+        <Link href="/book" className="inline-block mt-4 px-4 py-2 bg-accent text-white rounded-md">
             Book Activity
-          </a>
         </Link>
       </div>
     </motion.div>

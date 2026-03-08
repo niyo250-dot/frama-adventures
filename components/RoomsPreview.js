@@ -16,9 +16,7 @@ export default function RoomsPreview() {
         <div className="bg-white shadow-md rounded-lg p-4">Sample Room</div>
       </div>
       <div className="text-center mt-4">
-        <Link href="/rooms">
-          <a className="text-accent font-semibold">View all rooms →</a>
-        </Link>
+        <Link href="/rooms" className="text-accent font-semibold">View all rooms →</Link>
       </div>
     </motion.section>
   );

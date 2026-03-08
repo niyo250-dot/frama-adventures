@@ -17,9 +17,7 @@ export default function GalleryPreview() {
         <div className="h-32 bg-gray-200"></div>
       </div>
       <div className="text-center mt-4">
-        <Link href="/gallery">
-          <a className="text-accent font-semibold">View full gallery →</a>
-        </Link>
+        <Link href="/gallery" className="text-accent font-semibold">View full gallery →</Link>
       </div>
     </motion.section>
   );
