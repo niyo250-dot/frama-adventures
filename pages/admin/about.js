@@ -4,43 +4,70 @@ import axios from 'axios';
 
 export default function AdminAbout() {
   const [page, setPage] = useState({ whoWeAre: '', ourTeam: '' });
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const refresh = () => {
-    axios.get('/api/about').then((res) => setPage(res.data));
-  };
-  useEffect(() => { refresh(); }, []);
+  const refresh = () => axios.get('/api/about').then((res) => setPage(res.data || { whoWeAre: '', ourTeam: '' }));
+
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const save = async () => {
-    const token = localStorage.getItem('token');
-    await axios.post('/api/about', page, { headers: { Authorization: `Bearer ${token}` } });
-    alert('Saved');
+    if (!page.whoWeAre.trim() || !page.ourTeam.trim()) {
+      setMessage('Both sections are required.');
+      return;
+    }
+    setLoading(true);
+    setMessage('');
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('/api/about', page, { headers: { Authorization: `Bearer ${token}` } });
+      setMessage('About page saved successfully.');
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Unable to save about content.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <AdminLayout>
-      <h2 className="text-2xl font-bold mb-4">About Page Editor</h2>
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <h3 className="font-semibold">Who We Are</h3>
-          <textarea
-            value={page.whoWeAre}
-            onChange={(e) => setPage({ ...page, whoWeAre: e.target.value })}
-            className="w-full border p-2"
-            rows="4"
-          />
+          <h2 className="text-2xl font-semibold">About Page Editor</h2>
+          <p className="mt-1 text-sm text-slate-600">Update the public about sections for your website.</p>
         </div>
-        <div>
-          <h3 className="font-semibold">Our Team</h3>
-          <textarea
-            value={page.ourTeam}
-            onChange={(e) => setPage({ ...page, ourTeam: e.target.value })}
-            className="w-full border p-2"
-            rows="4"
-          />
+
+        {message && <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">{message}</div>}
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Who We Are</label>
+            <textarea
+              value={page.whoWeAre}
+              onChange={(e) => setPage({ ...page, whoWeAre: e.target.value })}
+              className="mt-2 w-full rounded-3xl border border-slate-300 px-4 py-3"
+              rows="5"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Our Team</label>
+            <textarea
+              value={page.ourTeam}
+              onChange={(e) => setPage({ ...page, ourTeam: e.target.value })}
+              className="mt-2 w-full rounded-3xl border border-slate-300 px-4 py-3"
+              rows="5"
+            />
+          </div>
+          <button
+            onClick={save}
+            disabled={loading}
+            className="rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-orange-500 disabled:opacity-60"
+          >
+            {loading ? 'Saving…' : 'Save'}
+          </button>
         </div>
-        <button onClick={save} className="bg-accent text-white px-4 py-2 rounded">
-          Save
-        </button>
       </div>
     </AdminLayout>
   );
