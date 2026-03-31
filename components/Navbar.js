@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const navItems = [
   { label: 'Home', href: '/home' },
@@ -14,13 +15,21 @@ const navItems = [
   },
   { label: 'Rooms & Accommodation', href: '/rooms' },
   { label: 'Tours & Activities', href: '/activities' },
+  { label: 'Events', href: '/events' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [logoUrl, setLogoUrl] = useState('');
+
+  useEffect(() => {
+    axios
+      .get('/api/settings')
+      .then((res) => setLogoUrl(res.data?.logoUrl || ''))
+      .catch(() => setLogoUrl(''));
+  }, []);
 
   const toggleMobile = () => setMobileOpen(!mobileOpen);
 
@@ -29,21 +38,24 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/home" className="text-xl font-bold">
-              FRAMA Eco-Lodge
+            <Link href="/home" className="flex items-center gap-3 text-xl font-bold">
+              {logoUrl ? (
+                <img src={logoUrl} alt="Site logo" className="h-10 w-10 object-contain rounded-full border border-slate-200" />
+              ) : null}
+              <span>{logoUrl ? 'FRAMA Eco-Lodge' : 'FRAMA Eco-Lodge'}</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => (
               <div key={item.label} className="relative group">
                 <Link href={item.href} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100">
-                    {item.label}
+                  {item.label}
                 </Link>
                 {item.dropdown && (
                   <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
                     {item.dropdown.map((sub) => (
                       <Link href={sub.href} key={sub.label} className="block px-4 py-2 text-sm hover:bg-gray-100">
-                          {sub.label}
+                        {sub.label}
                       </Link>
                     ))}
                   </div>
@@ -51,7 +63,7 @@ export default function Navbar() {
               </div>
             ))}
             <Link href="/book" className="ml-4 inline-block px-4 py-2 bg-accent text-white rounded-md hover:bg-orange-500">
-                Book Now
+              Book Now
             </Link>
           </div>
           <div className="flex items-center md:hidden">
@@ -64,19 +76,9 @@ export default function Navbar() {
                 stroke="currentColor"
               >
                 {mobileOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
@@ -84,21 +86,17 @@ export default function Navbar() {
         </div>
       </div>
       {mobileOpen && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          className="md:hidden bg-white shadow-md"
-        >
+        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="md:hidden bg-white shadow-md">
           {navItems.map((item) => (
             <div key={item.label} className="border-b">
               <Link href={item.href} className="block px-4 py-2 text-base font-medium" onClick={() => setMobileOpen(false)}>
-                  {item.label}
-                </Link>
+                {item.label}
+              </Link>
               {item.dropdown && (
                 <div className="pl-4">
                   {item.dropdown.map((sub) => (
                     <Link href={sub.href} key={sub.label} className="block px-4 py-2 text-sm" onClick={() => setMobileOpen(false)}>
-                        {sub.label}
+                      {sub.label}
                     </Link>
                   ))}
                 </div>
@@ -106,7 +104,7 @@ export default function Navbar() {
             </div>
           ))}
           <Link href="/book" className="block mt-2 mx-4 px-4 py-2 bg-accent text-white text-center rounded-md">
-              Book Now
+            Book Now
           </Link>
         </motion.div>
       )}
